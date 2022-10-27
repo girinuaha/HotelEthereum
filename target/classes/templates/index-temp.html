@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+
+<body>
+
+	<button class="enableEthereumButton">Enable Ethereum</button>
+	<button class="getValueButton">Get Value</button>
+	<h2>
+		Account: <span class="showAccount"></span><br> 
+		Balance: <span class="showBalance"></span><br>
+		Price: <span class="showPrice">0.2</span><br>
+		Deposit: <span class="showDeposit">0.1</span><br>
+		Total: <span class="showTotal">0.3</span>
+	</h2>
+
+	<!-- <form th:action="@{|/processPayment/${invoice.invoiceId}|}"
+		th:object="${invoice}" method="POST">
+		<input class="address form-control" type='text' name="address">
+		<input class="ether form-control" type='text' name="ether">
+		<button class="genric-btn primary-border circle arrow e-large">
+			Pay<span class="lnr lnr-arrow-right"></span>
+		</button>
+	</form> -->
+
+
+</body>
+
+<script th:src="@{/assets/js/jquery-3.2.1.min.js}"></script>
+<script th:src="@{/assets/js/contract.js}"></script>
+<script th:src="@{/assets/js/ethers-5.6.umd.min.js}" type="text/javascript"></script>
+<script type="text/javascript">
+
+	window.addEventListener('load', async() => {
+		
+		const price = document.querySelector('.showPrice').innerHTML;
+		const deposit = document.querySelector('.showDeposit').innerHTML;
+		const total = document.querySelector('.showTotal').innerHTML;
+		
+		const provider = new ethers.providers.Web3Provider(window.ethereum);
+		const account = await provider.send("eth_requestAccounts", []);
+		const signer = provider.getSigner();
+		
+		const CONTRACT_ADDRESS = "0x60EEA186F47F3aD52152d3e23D3b2D5D90646c2E";
+		const CONTRACT_ADDRESS2 = "0xC6c3b8A55503Ec7E612b6DF300677bDa5e98e118";
+		const CONTRACT_ADDRESS3 = "0x72017E02D404274E3F862637672a67940FAEC455";
+		const contract = new ethers.Contract(CONTRACT_ADDRESS3, contractAbi, signer);
+		
+		const message = await contract.owner();
+	    console.log("The message is: " + message);
+	    
+	    /* const message3 = await contract.createTransaction('TRX20221', ethers.utils.parseEther(price), ethers.utils.parseEther(deposit), {value: ethers.utils.parseEther(total)})
+		.then(tx => {
+	    	message3 = tx;
+	    })
+	    .catch(e => {
+			
+			
+		     if (e.code === 4001){
+		         alert(e.message);
+		     } else {
+		    	 alert(e.reason);
+		     } 
+		});
+	    console.log(message3); */
+	    
+	    const message2 = await contract.getDetailTransaction('TRX20221')
+	    console.log("The message is: " + message2);
+	    
+	    const message4 = await contract.finishTransaction('TRX2022102514235067', {value: ethers.utils.parseEther(total)})
+		.catch(e => {
+			 console.log(e.data.message);
+		     if (e.code === 4001){
+		         alert(e.message);
+		     } else if (e.code === -32603) {
+		    	 alert(e.data.message);
+		     } 
+		});
+	    console.log(message4);
+	    
+	    
+	});
+	
+</script>
+
+</html>

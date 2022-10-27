@@ -1,0 +1,65 @@
+<script type="text/javascript">
+	$(document).ready(function () {
+		
+	    $('#tableTask').DataTable({
+	    	responsive: true
+	    });
+	    
+	    var action = $('#formTask').attr('action');
+
+		$('#table_id').DataTable();
+
+		$('#taskID').keyup(function(e) {
+			var v = $('#taskID').val();
+			$('#formTask').attr('action', action.concat(v));
+		});
+		
+		/* $('#inlineFormCustomSelectPref').change(function(e) { */
+			
+			var select = $('#inlineFormCustomSelectPref').val();
+			var fileTypes = $('.fileType');
+			
+			for (var i = 0, len = fileTypes.length; i < len; i++) {
+				
+				if (fileTypes[i].children[0].getAttribute("data-class") == select) {
+					
+					fileTypes[i].removeAttribute("hidden");
+				
+				} else {
+					
+					fileTypes[i].setAttribute("hidden", "true");
+				}
+			}
+			
+			$('#ruleTitle').html('Rule for '.concat(select).concat(' type document'));
+			$('#reasonTitle').html('Reason for '.concat(select).concat(' type document'));
+		
+	});
+	
+	// Get the modal
+	var modal = document.getElementById("myModal");
+
+	// Get the button that opens the modal
+	var btn = document.getElementById("myBtn");
+
+	// Get the <span> element that closes the modal
+	var span = document.getElementsByClassName("close")[0];
+
+	// When the user clicks the button, open the modal 
+	btn.onclick = function() {
+	  modal.style.display = "block";
+	}
+
+	// When the user clicks on <span> (x), close the modal
+	span.onclick = function() {
+	  modal.style.display = "none";
+	}
+
+	// When the user clicks anywhere outside of the modal, close it
+	window.onclick = function(event) {
+	  if (event.target == modal) {
+	    modal.style.display = "none";
+	  }
+	}
+	
+</script>
